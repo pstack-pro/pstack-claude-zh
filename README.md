@@ -8,7 +8,7 @@ pstack 中文版（预览）
 
 ## 这一版翻译了什么
 
-54 个 skill 的 description 是精简中文，并在句内嵌入英文触发词（不含整段 `| EN:` 英文副本，省 token）。中英文提问的路由效果还需评测。skill 正文仍是英文，之后再逐篇翻译。
+54 个 skill 的 description 改成纯中文，句子里直接嵌入 slash 命令和英文触发短语（如 `'arena this'`），所以用中文或英文提问都能匹配；不再附整段英文原文，每次会话少加载一半 token。`test/routing-eval/` 里有模拟路由评测（不等同于真实的 Claude Code / pi 路由）。skill 正文仍是英文，之后再逐篇翻译。
 
 ## 前置条件
 
