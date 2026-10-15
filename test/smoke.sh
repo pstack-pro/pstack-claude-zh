@@ -38,6 +38,8 @@ cmd_left="$(grep -rnoE "(^|[[:space:]\`(\"'])/($names)([^a-zA-Z0-9/_-]|$)" "$ROO
 [ -z "$cmd_left" ] && ok "slash commands use /pstack: prefix" || { no "unprefixed slash commands"; echo "$cmd_left" | head -5; }
 bad="$(for d in "$ROOT"/skills/*/; do n="$(basename "$d")"; grep -q "^name: $n$" "$d/SKILL.md" || echo "$n"; done)"
 [ -z "$bad" ] && ok "skill names match directories" || no "skill names: $bad"
+agent_left="$(grep -rnoE 'subagent_type: "(comment-sicko|poteto-agent|Comment Sicko)"' "$ROOT/skills" "$ROOT/agents" --include='*.md' || true)"
+[ -z "$agent_left" ] && ok "plugin agents use pstack: namespace" || { no "un-namespaced plugin agents"; echo "$agent_left" | head -5; }
 
 echo "$pass passed, $fail failed"
 [ "$fail" -eq 0 ]

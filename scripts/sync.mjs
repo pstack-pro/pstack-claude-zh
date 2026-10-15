@@ -38,6 +38,8 @@ const AGENT_RENAMES = { "Comment Sicko": "comment-sicko" };
 
 // Ordered: specific strings before the generic prefixes they contain.
 const REPLACEMENTS = [
+	// The guide under pstack/docs/ is not shipped; point its links at upstream.
+	[/\]\((?:\.\.\/)+docs\//g, "](https://github.com/cursor/plugins/blob/main/pstack/docs/"],
 	["~/.cursor/rules/pstack-models.mdc", ".pstack/models.md"],
 	["the `pstack-models.mdc` rule", "`.pstack/models.md`"],
 	[/(?<![\w./-])pstack-models\.mdc/g, ".pstack/models.md"],
@@ -53,6 +55,8 @@ const REPLACEMENTS = [
 	["`AskQuestion`", "`AskUserQuestion`"],
 	[/\bAskQuestion\b/g, "AskUserQuestion"],
 	['subagent_type: "Comment Sicko"', 'subagent_type: "pstack:comment-sicko"'],
+	// pstack 0.15.2x renamed the agent to comment-sicko; plugin agents are still namespaced.
+	['subagent_type: "comment-sicko"', 'subagent_type: "pstack:comment-sicko"'],
 	['subagent_type: "poteto-agent"', 'subagent_type: "pstack:poteto-agent"'],
 	["Cursor's built-in `create-skill` skill", "the `skill-creator` skill (if installed; else the **authoring-a-skill** playbook)"],
 	["Cursor's built-in `create-skill`", "the `skill-creator` skill (if installed; else the **authoring-a-skill** playbook)"],
