@@ -1,6 +1,6 @@
 ---
 name: setup-pstack
-description: "为当前项目单独配置 pstack 各角色使用的 Claude 模型。推荐 claude-tiers 预设（最难的任务用 fable，判断用 opus，写代码用 sonnet，探索用 haiku），并写入 .pstack/models.md，由 pstack 的 SessionStart hook 注入。用于 /pstack:setup-pstack、\"configure pstack models\"（配置 pstack 模型），或调整 pstack 的模型选择时。 | EN: Configure which Claude model pstack uses per role, for this project only. Proposes the claude-tiers preset (fable for the hardest tasks, opus for judgment, sonnet for code, haiku for exploration) and writes .pstack/models.md, which the pstack SessionStart hook injects. Use for /pstack:setup-pstack, \"configure pstack models\", or changing pstack's model choices."
+description: "为当前项目单独配置 pstack 各角色使用的 Claude 模型。推荐 claude-tiers 预设（最难的任务用 fable，判断用 opus，写代码用 sonnet，探索用 haiku），并写入 .pstack/models.md，由 pstack 的 SessionStart hook 注入。用于 /pstack:setup-pstack、\"configure pstack models\"（配置 pstack 模型），或调整 pstack 的模型选择时。"
 ---
 
 # Setup pstack (Claude Code)
