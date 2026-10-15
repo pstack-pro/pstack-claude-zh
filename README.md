@@ -1,6 +1,14 @@
-# claude-pstack
+# claude-pstack-zh
 
-把 [pstack](https://github.com/cursor/plugins/tree/main/pstack)（poteto 的严谨 agent 工作流）移植成 Claude Code 插件。只用 Claude 模型（fable / opus / sonnet / haiku），不调用任何外部模型或 CLI。
+pstack 中文版（预览）
+
+把 [pstack](https://github.com/cursor/plugins/tree/main/pstack)（poteto 的严谨 agent 工作流）移植成 Claude Code 插件。这是中文预览版，版本 0.15.25-zh.1（见 `.claude-plugin/plugin.json`），版本号形如 `<上游版本>-zh.N`。跟踪上游 pstack 0.15.25（[cursor/plugins@e5136d8](https://github.com/cursor/plugins/commit/e5136d8)），上游版本记在 `UPSTREAM.json`。
+
+只用 Claude 模型（fable / opus / sonnet / haiku），不调用任何外部模型或 CLI。
+
+## 这一版翻译了什么
+
+54 个 skill 的 description 都是双语：前面是中文，后面整段保留原来的英文，触发词还在。这样用中文或英文提问，都有机会匹配到对应的 skill（路由效果还没有系统评测）。skill 正文仍是英文，之后再逐篇翻译。
 
 ## 前置条件
 
@@ -13,33 +21,35 @@
 
 ```bash
 # 只在当前项目启用（写入 .claude/settings.local.json，默认被 gitignore，不会提交）
-claude plugin marketplace add taokeqin/claude-pstack --scope local
-claude plugin install pstack@claude-pstack --scope local
+claude plugin marketplace add taokeqin/claude-pstack-zh --scope local
+claude plugin install pstack@claude-pstack-zh --scope local
 
 # 更新到 GitHub 上的最新版本
-claude plugin marketplace update claude-pstack
+claude plugin marketplace update claude-pstack-zh
 
 # 从当前项目卸载
-claude plugin uninstall pstack@claude-pstack --scope local
-claude plugin marketplace remove claude-pstack --scope local
+claude plugin uninstall pstack@claude-pstack-zh --scope local
+claude plugin marketplace remove claude-pstack-zh --scope local
 ```
+
+插件名仍是 `pstack`，命令仍是 `/pstack:<name>`。不要在同一个项目里同时启用本插件和英文版 [claude-pstack](https://github.com/taokeqin/claude-pstack)，两边的插件名都是 `pstack`。
 
 用 local scope 安装时，其他项目的 `claude plugin list` 里会显示 pstack，但状态是 disabled，不会加载。
 
 想改代码，或者只想在一次会话里试用，可以 clone 到任意目录，然后用本地路径：
 
 ```bash
-git clone https://github.com/taokeqin/claude-pstack.git <任意目录>
+git clone https://github.com/taokeqin/claude-pstack-zh.git <任意目录>
 
 # 只试一次：仅这次会话加载，不写任何配置
 claude --plugin-dir <任意目录>
 
 # 或者从本地目录安装到当前项目（Claude Code 会保存成绝对路径）
 claude plugin marketplace add <任意目录> --scope local
-claude plugin install pstack@claude-pstack --scope local
+claude plugin install pstack@claude-pstack-zh --scope local
 ```
 
-**同一台机器上，GitHub 和本地目录两种来源只能选一种。** marketplace 名字 `claude-pstack` 是全局共享的：再用另一种来源添加，会替换掉所有项目共用的来源；移除时也会把这条全局登记一起删掉，导致其他项目里的 pstack 失效。要切换来源，先在所有启用了 pstack 的项目里卸载，再用新来源重新安装。
+**同一台机器上，GitHub 和本地目录两种来源只能选一种。** marketplace 名字 `claude-pstack-zh` 是全局共享的：再用另一种来源添加，会替换掉所有项目共用的来源；移除时也会把这条全局登记一起删掉，导致其他项目里的 pstack 失效。要切换来源，先在所有启用了 pstack 的项目里卸载，再用新来源重新安装。
 
 ## 开始用
 
@@ -70,6 +80,19 @@ claude plugin install pstack@claude-pstack --scope local
 - `agents/readonly.md`：禁用编辑类工具的通用 agent，对应 Cursor 的 `readonly: true`。
 - 配置文件放在 `.pstack/models.md`，而不是 `.claude/` 下。Claude Code 把 `.claude/` 当作敏感目录，每次写入都要确认。
 
+## 翻译是怎么维护的
+
+译文的共同来源在 `i18n/zh/`，Claude 版和 pi 版用同一套：
+
+- `descriptions.json`：每个 skill 一条，有英文原文、中文和 `source_sha256`。原文一变，哈希对不上，这条就算过期。
+- `glossary.md`：术语表。改译法时改这里。
+
+`scripts/sync.mjs` 从上游生成 `skills/` 和 `agents/` 之后调用 `scripts/apply-zh.mjs`，把中文 description 写进 skill，并把其中的 slash 命令改成这一边的前缀 `/pstack:`。移植时改过描述的 skill 写在 `i18n/zh-port.json`，覆盖共同译文里的同名条目。这边目前覆盖的是 `setup-pstack`。
+
+`node scripts/validate-zh.mjs` 核对译文是否原样保留了标识符、命令、工具名、路径、代码、链接和触发短语。过期条目默认算失败。
+
+每周的 GitHub Action（`.github/workflows/sync-upstream.yml`）会同步上游，再跑 `node scripts/validate-zh.mjs --allow-stale`。过期只记成警告。出现其他错误时工作流失败，不会开 PR。PR 正文附上校验输出，并列出其中包含 `stale` 的行，这些行对应的条目需要重译。推送和 PR 上的 `.github/workflows/validate.yml` 不加 `--allow-stale`，过期会让检查失败。
+
 ## 跟进上游
 
 ```bash
@@ -80,8 +103,19 @@ PSTACK_SRC=<plugins 仓库>/pstack node scripts/sync.mjs
 test/smoke.sh                                # 离线检查：不调用模型，不消耗额度
 ```
 
-`sync.mjs` 会重新生成 `skills/` 和 `agents/`，然后叠加 `overrides/`（`setup-pstack` 和 `readonly` agent）。上游版本记录在 `UPSTREAM.json`。
+`sync.mjs` 会重新生成 `skills/` 和 `agents/`，然后叠加 `overrides/`（`setup-pstack` 和 `readonly` agent），再套用中文 description。上游版本记录在 `UPSTREAM.json`。
 
-## 许可
+## 相关仓库
 
-pstack 原作者 Lauren Tan，MIT 许可，见 `LICENSE-pstack`。
+- 英文版 Claude Code 移植：<https://github.com/taokeqin/claude-pstack>
+- 英文版 pi package：<https://github.com/taokeqin/pi-pstack>
+- pi 中文版：<https://github.com/taokeqin/pi-pstack-zh>
+- 上游 pstack：<https://github.com/cursor/plugins/tree/main/pstack>
+
+## 致谢与许可
+
+pstack 原作者 Lauren Tan（[cursor/plugins](https://github.com/cursor/plugins)），MIT 许可，见 `LICENSE-pstack`。
+
+移植作者 Hacken Tao，MIT 许可。
+
+`i18n/zh/glossary.md` 的部分条目改编自 [fenfenxu/pstack-zh](https://github.com/fenfenxu/pstack-zh)（MIT）。

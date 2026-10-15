@@ -8,6 +8,7 @@ import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
+import { applyZh } from "./apply-zh.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const UPSTREAM = "https://github.com/cursor/plugins.git";
@@ -143,6 +144,9 @@ for (const file of fs.readdirSync(path.join(root, "agents"))) {
 
 const overrides = path.join(root, "overrides");
 if (fs.existsSync(overrides)) fs.cpSync(overrides, root, { recursive: true });
+
+// Chinese layer: shared translations in i18n/zh/, rewritten with this side's command prefix.
+applyZh({ root, src, prefix: COMMAND_PREFIX, transform });
 
 for (const p of [
 	...fs.readdirSync(path.join(root, "agents")).map((f) => path.join(root, "agents", f)),
