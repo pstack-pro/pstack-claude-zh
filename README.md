@@ -1,4 +1,4 @@
-# claude-pstack-zh
+# pstack-claude-zh
 
 pstack 中文版（预览）
 
@@ -10,7 +10,7 @@ pstack 中文版（预览）
 
 54 个 skill 的 description 改成纯中文，句子里直接嵌入 slash 命令和英文触发短语（如 `'arena this'`），所以用中文或英文提问都能匹配；不再附整段英文原文，每次会话少加载一半 token。`test/routing-eval/` 里有模拟路由评测（不等同于真实的 Claude Code / pi 路由）。
 
-skill 正文、playbook、references 和 agents 已全部译成中文（上游 111 个 Markdown 文件全部译完）。这是预览质量的机器辅助翻译，难免有生硬或不准的地方；代码块、命令、工具名、路径、链接和脚本要解析的字符串都保持英文，并有脚本逐项核对。移植时新增或改写的文件（`overrides/` 里的 `setup-pstack`、`readonly` agent，以及本仓库自己的适配说明）仍是英文。**如果觉得中文版不好用，请安装英文版：[claude-pstack](https://github.com/taokeqin/claude-pstack) 或 [pi-pstack](https://github.com/taokeqin/pi-pstack)。**
+skill 正文、playbook、references 和 agents 已全部译成中文（上游 111 个 Markdown 文件全部译完）。这是预览质量的机器辅助翻译，难免有生硬或不准的地方；代码块、命令、工具名、路径、链接和脚本要解析的字符串都保持英文，并有脚本逐项核对。移植时新增或改写的文件（`overrides/` 里的 `setup-pstack`、`readonly` agent，以及本仓库自己的适配说明）仍是英文。**如果觉得中文版不好用，请安装英文版：[pstack-claude](https://github.com/taokeqin/pstack-claude) 或 [pstack-pi](https://github.com/taokeqin/pstack-pi)。**
 
 ## 前置条件
 
@@ -23,35 +23,35 @@ skill 正文、playbook、references 和 agents 已全部译成中文（上游 1
 
 ```bash
 # 只在当前项目启用（写入 .claude/settings.local.json，默认被 gitignore，不会提交）
-claude plugin marketplace add taokeqin/claude-pstack-zh --scope local
-claude plugin install pstack@claude-pstack-zh --scope local
+claude plugin marketplace add taokeqin/pstack-claude-zh --scope local
+claude plugin install pstack@pstack-claude-zh --scope local
 
 # 更新到 GitHub 上的最新版本
-claude plugin marketplace update claude-pstack-zh
+claude plugin marketplace update pstack-claude-zh
 
 # 从当前项目卸载
-claude plugin uninstall pstack@claude-pstack-zh --scope local
-claude plugin marketplace remove claude-pstack-zh --scope local
+claude plugin uninstall pstack@pstack-claude-zh --scope local
+claude plugin marketplace remove pstack-claude-zh --scope local
 ```
 
-插件名仍是 `pstack`，命令仍是 `/pstack:<name>`。不要在同一个项目里同时启用本插件和英文版 [claude-pstack](https://github.com/taokeqin/claude-pstack)，两边的插件名都是 `pstack`。
+插件名仍是 `pstack`，命令仍是 `/pstack:<name>`。不要在同一个项目里同时启用本插件和英文版 [pstack-claude](https://github.com/taokeqin/pstack-claude)，两边的插件名都是 `pstack`。
 
 用 local scope 安装时，其他项目的 `claude plugin list` 里会显示 pstack，但状态是 disabled，不会加载。
 
 想改代码，或者只想在一次会话里试用，可以 clone 到任意目录，然后用本地路径：
 
 ```bash
-git clone https://github.com/taokeqin/claude-pstack-zh.git <任意目录>
+git clone https://github.com/taokeqin/pstack-claude-zh.git <任意目录>
 
 # 只试一次：仅这次会话加载，不写任何配置
 claude --plugin-dir <任意目录>
 
 # 或者从本地目录安装到当前项目（Claude Code 会保存成绝对路径）
 claude plugin marketplace add <任意目录> --scope local
-claude plugin install pstack@claude-pstack-zh --scope local
+claude plugin install pstack@pstack-claude-zh --scope local
 ```
 
-**同一台机器上，GitHub 和本地目录两种来源只能选一种。** marketplace 名字 `claude-pstack-zh` 是全局共享的：再用另一种来源添加，会替换掉所有项目共用的来源；移除时也会把这条全局登记一起删掉，导致其他项目里的 pstack 失效。要切换来源，先在所有启用了 pstack 的项目里卸载，再用新来源重新安装。
+**同一台机器上，GitHub 和本地目录两种来源只能选一种。** marketplace 名字 `pstack-claude-zh` 是全局共享的：再用另一种来源添加，会替换掉所有项目共用的来源；移除时也会把这条全局登记一起删掉，导致其他项目里的 pstack 失效。要切换来源，先在所有启用了 pstack 的项目里卸载，再用新来源重新安装。
 
 ## 开始用
 
@@ -110,9 +110,9 @@ test/smoke.sh                                # 离线检查：不调用模型，
 
 ## 相关仓库
 
-- 英文版 Claude Code 移植：<https://github.com/taokeqin/claude-pstack>
-- 英文版 pi package：<https://github.com/taokeqin/pi-pstack>
-- pi 中文版：<https://github.com/taokeqin/pi-pstack-zh>
+- 英文版 Claude Code 移植：<https://github.com/taokeqin/pstack-claude>
+- 英文版 pi package：<https://github.com/taokeqin/pstack-pi>
+- pi 中文版：<https://github.com/taokeqin/pstack-pi-zh>
 - 上游 pstack：<https://github.com/cursor/plugins/tree/main/pstack>
 
 ## 致谢与许可

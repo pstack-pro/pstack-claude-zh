@@ -14,5 +14,7 @@
     "subagents",
     "chinese",
     "zh"
-  ]
+  ],
+  "homepage": "https://github.com/taokeqin/pstack-claude-zh",
+  "repository": "https://github.com/taokeqin/pstack-claude-zh"
 }
